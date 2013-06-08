@@ -5,7 +5,24 @@ describe('backbone.service', function () {
       url: "http://localhost",
       targets: {
         ping: '/ping',
-        login: ['/login', 'post']
+        login: {
+          path: function(model) {
+            return "/login";
+          },
+          method: "post",
+          data: function(model, options) {
+            return options;
+          }
+        },
+        serve: {
+          path: function(model) {
+            return model.toJSON();
+          },
+          method: "get",
+          data: function(model, options) {
+            return _.extend(model.toJSON(),options);
+          }
+        }
       }
     };
   });
@@ -21,18 +38,20 @@ describe('backbone.service', function () {
       expect(service.targets).to.be.an('array');
       expect(service.targets[0].method).to.equal('GET');
       expect(service.targets[1].method).to.equal('post');
+      expect(service.targets[2].method).to.equal('get');
     });
 
     it("should create methods", function () {
       var service = new Backbone.Service(this.options);
       expect(service.ping).to.be.an('function');
       expect(service.login).to.be.an('function');
+      expect(service.serve).to.be.an('function');
     });
 
     describe('#createMethod', function () {
       it("should create a new methods based on targets", function () {
         var service = new Backbone.Service();
-        service.createMethod({ name: 'ping', url: '/ping' });
+        service.createMethod(service, { name: 'ping', url: '/ping' });
         expect(service.ping).to.be.a('function');
       });
     });
@@ -40,11 +59,10 @@ describe('backbone.service', function () {
     describe('#createOptions', function () {
       it("should create options", function () {
         var service = new Backbone.Service(this.options);
-        var options = service.createOptions(null, { path: '/ping' }, { param: true });
+        var options = service.createOptions(null, { path: '/ping' }, { param: true }, null);
         expect(options.url).to.equal(this.options.url + '/ping');
         expect(options.success).to.be.a('function');
         expect(options.error).to.be.a('function');
-        expect(options.data.param).to.equal(true);
       });
 
       it("should accept url function", function() {
@@ -55,6 +73,26 @@ describe('backbone.service', function () {
         var service = new Backbone.Service(this.options);
         var options = service.createOptions(null, { path: '/ping' });
         expect(options.url).to.equal('http://localhost/ping');
+      });
+
+      it("should accept path function", function() {
+        this.options.url = function() {
+          return 'http://localhost';
+        };
+        
+        var service = new Backbone.Service(this.options);
+        var options = service.createOptions(null, { path: function(){ return '/ping' } });
+        expect(options.url).to.equal('http://localhost/ping');
+      });
+
+      it("should accept path function with model", function() {
+        this.options.url = function() {
+          return 'http://localhost';
+        };
+        
+        var service = new Backbone.Service(this.options);
+        var options = service.createOptions(null, { path: function(model){ return model.path } }, null, {'path': '/ping-pong'} );
+        expect(options.url).to.equal('http://localhost/ping-pong');
       });
     });
 
