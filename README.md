@@ -1,6 +1,6 @@
 Backbone.Service
 ================
-[![build status](https://secure.travis-ci.org/mkuklis/backbone.service.png)](http://travis-ci.org/mkuklis/backbone.service)
+[![build status](https://api.travis-ci.org/ViLPy/backbone.service.png)](http://travis-ci.org/ViLPy/backbone.service)
 
 Backbone.Service aims to help with the cases when standard restul API is not an option.
 
