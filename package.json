@@ -15,6 +15,7 @@
     "grunt": "latest",
     "grunt-contrib-uglify": "0.2.0",
     "grunt-contrib-jshint": "0.3.0",
+    "phantomjs": "latest",
     "mocha-phantomjs": "latest"
   },
   "optionalDependencies": {},
