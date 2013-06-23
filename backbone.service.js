@@ -28,6 +28,7 @@
     }
 
     Service.sendModels = true;
+    Service.url = "";
 
     Service.prototype.createMethod = function (parent, target) {
         var promise, method, self = this;
@@ -73,6 +74,8 @@
         var path;
         if (_.isFunction(target.path)) path = target.path(model);
         else path = target.path;
+
+        var url = _.result(this.options, 'url') || Service.url;
 
         return {
             url: _.result(this.options, 'url') + path,
