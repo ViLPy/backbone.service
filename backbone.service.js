@@ -78,7 +78,7 @@
         var url = _.result(this.options, 'url') || Service.url;
 
         return {
-            url: _.result(this.options, 'url') + path,
+            url: url + path,
             success: function (resp, status, xhr) {
                 options.success && options.success.call(self, resp);
                 promise.resolve(resp);
