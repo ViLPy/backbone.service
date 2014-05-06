@@ -47,7 +47,8 @@
             }
             options = self.createOptions(promise, target, options, this);
             if (data && !_.isEmpty(data)) {
-                if (!Backbone.emulateJSON) {
+                // only for non-get
+                if (!Backbone.emulateJSON && methodMap[target.method.toUpperCase()] != 'read') {
                     data = JSON.stringify(data);
                     options.contentType = 'application/json';
                 }
