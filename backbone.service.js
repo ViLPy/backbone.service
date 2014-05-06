@@ -72,7 +72,7 @@
         options || (options = {});
 
         var path;
-        if (_.isFunction(target.path)) path = target.path(model);
+        if (_.isFunction(target.path)) path = target.path(model, options);
         else path = target.path;
 
         var url = _.result(this.options, 'url') || Service.url;
